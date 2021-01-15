@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useDebugValue } from "react";
 import { Button } from "reactstrap";
 import { IconButton, InputAdornment, TextField } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
+import Movie from "./movie";
 
 function Home() {
   const [movie, setMovie] = useState("");
+  const [currentMovie, setCurrentMovie] = useState("");
+  const [movies, setMovies] = useState([]);
 
   function handleInput(event) {
     const target = event.target;
@@ -15,17 +18,19 @@ function Home() {
 
   function handleKeyPress(event) {
     if (event.key === "Enter") {
+      setCurrentMovie(movie);
       handleSubmit();
     }
   }
 
   function handleSubmit() {
     axios
-      .get("http://www.omdbapi.com/?i=tt3896198&apikey=576fc94e")
+      .get(`http://www.omdbapi.com/?s=${movie}&apikey=576fc94e`)
       // axios automatically changes the response to JSON
-      .then((res) => {})
+      .then((res) => {
+        setMovies(res.data.Search);
+      })
       .catch((err) => {});
-    setMovie("");
   }
 
   return (
@@ -46,7 +51,10 @@ function Home() {
             ),
           }}
         />
-        <p>{movie}</p>
+        {currentMovie ? <h5>Results for "{currentMovie}"</h5> : ""}
+        {movies.map((m) => {
+          return <Movie movie={m} />;
+        })}
       </div>
     </div>
   );
