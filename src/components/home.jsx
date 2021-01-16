@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { IconButton, InputAdornment, TextField } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
-import "./home.css";
 import Movie from "./movie";
 import Banner from "react-js-banner";
+import "./home.css";
 
 function Home() {
   const [movie, setMovie] = useState("");
@@ -12,6 +12,7 @@ function Home() {
   const [movies, setMovies] = useState([]);
   const [nominationList, setNominationList] = useState([]);
   const [nominations, setNominations] = useState(new Set());
+  const [errmsg, setErrmsg] = useState("");
 
   const banner = (
     <Banner
@@ -35,10 +36,14 @@ function Home() {
 
   function handleSubmit() {
     axios
-      .get(`http://www.omdbapi.com/?s=${movie}&apikey=576fc94e`)
+      .get(`http://www.omdbapi.com/?s=${movie}&type=movie&apikey=576fc94e`)
       // axios automatically changes the response to JSON
       .then((res) => {
         setMovies(res.data.Search);
+        return res;
+      })
+      .then((res) => {
+        setErrmsg(res.data.Error);
       })
       .catch((err) => {});
   }
@@ -64,6 +69,7 @@ function Home() {
   return (
     <div className="container">
       {nominations.size >= 5 ? banner : undefined}
+      <h1>Shoppies</h1>
       <div className="omdb">
         <div className="search">
           <div style={{ margin: 20 }}>
@@ -85,21 +91,28 @@ function Home() {
             />
           </div>
           {currentMovie ? <h5>Results for "{currentMovie}"</h5> : ""}
-          {movies.map((movie) => {
-            return (
-              <Movie
-                key={movie.imdbID}
-                movie={{
-                  ID: movie.imdbID,
-                  Title: movie.Title,
-                  Year: movie.Year,
-                }}
-                nominations={nominations}
-                action="Nominate"
-                changeNominationList={changeNominationList}
-              />
-            );
-          })}
+          {errmsg === "Too many results."
+            ? setErrmsg("Too generaic. Please be more specific")
+            : undefined}
+          {movies ? (
+            movies.map((movie) => {
+              return (
+                <Movie
+                  key={movie.imdbID}
+                  movie={{
+                    ID: movie.imdbID,
+                    Title: movie.Title,
+                    Year: movie.Year,
+                  }}
+                  nominations={nominations}
+                  action="Nominate"
+                  changeNominationList={changeNominationList}
+                />
+              );
+            })
+          ) : (
+            <h5 style={{ color: "red" }}>{errmsg}</h5>
+          )}
         </div>
         <div className="nominations">
           <h2>Nominations</h2>

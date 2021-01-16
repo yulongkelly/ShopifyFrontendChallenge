@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  position: relative;
   margin-left: 20px;
   margin-right: 20px;
+  align-items: flex-start;
 }
 
 .omdb > div {
@@ -12,14 +12,10 @@
   border-radius: 20px;
   background-color: rgb(240, 240, 238);
   text-align: center;
+  flex: 1 auto;
 }
 
-.search {
-  border: 2px solid grey;
+.buttons {
+  border: 2px solid rgb(104, 103, 103);
   border-radius: 20px;
-  width: 60%;
-}
-
-.nominations {
-  width: 38%;
 }

@@ -35,6 +35,7 @@ export default function Movie(props) {
       <p>
         {props.movie.Title} ({props.movie.Year})
         <button
+          className="buttons"
           style={{ color: color.current, borderRadius: 5 }}
           onClick={handleClick}
         >
