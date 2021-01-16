@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 
-export function Movie(props) {
+export default function Movie(props) {
   const color = useRef("black");
   let i = 0;
   for (const nomination of props.nominations) {
@@ -21,8 +21,8 @@ export function Movie(props) {
       props.nominations.delete(props.movie);
       props.changeNominationList();
     } else if (props.action === "Nominate") {
-      if (props.nominations.size >= 5) {
-        // pop up a baner
+      if (color.current === "grey") {
+        alert("You've already nominated this movie");
       } else if (color.current === "black") {
         props.nominations.add(props.movie);
         props.changeNominationList();
