@@ -1,0 +1,25 @@
+.omdb {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.omdb > div {
+  border: 2px solid grey;
+  border-radius: 20px;
+  background-color: rgb(240, 240, 238);
+  text-align: center;
+}
+
+.search {
+  border: 2px solid grey;
+  border-radius: 20px;
+  width: 60%;
+}
+
+.nominations {
+  width: 38%;
+}
