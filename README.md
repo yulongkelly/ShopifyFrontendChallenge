@@ -1,7 +1,7 @@
 ### How to run it
 
 ```
-clone the repository from github
+clone the repository
 npm install
 npm start
 ```
