@@ -7,8 +7,6 @@ import { Movie } from "./movie";
 import io from "socket.io-client";
 
 function Home() {
-  console.log("begin");
-  const [socket, setSocket] = useState(null);
   const [movie, setMovie] = useState("");
   const [currentMovie, setCurrentMovie] = useState("");
   const [movies, setMovies] = useState([]);
@@ -38,28 +36,23 @@ function Home() {
       .catch((err) => {});
   }
 
-  useEffect(() => {
-    setSocket(io("http://localhost:3000"));
-  }, []);
-
-  useEffect(() => {
-    if (!socket) return;
-    socket.on("nominationsChanged", () => {
-      const tmp = [];
-      for (const nomination of nominations) {
-        tmp.push(
-          <li>
-            <Movie
-              movie={nomination}
-              nominations={nominations}
-              action="remove"
-            />
-          </li>
-        );
-      }
-      setNominationList(tmp);
-    });
-  }, [socket]);
+  const changeNominationList = () => {
+    const tmp = [];
+    for (const nomination of nominations) {
+      tmp.push(
+        <li>
+          <Movie
+            key={nomination.Title}
+            movie={nomination}
+            nominations={nominations}
+            action="remove"
+            changeNominationList={changeNominationList}
+          />
+        </li>
+      );
+    }
+    setNominationList(tmp);
+  };
 
   return (
     <div className="omdb">
@@ -86,10 +79,11 @@ function Home() {
         {movies.map((movie) => {
           return (
             <Movie
-              movie={movie}
+              key={movie.imdbID}
+              movie={{ ID: movie.imdbID, Title: movie.Title, Year: movie.Year }}
               nominations={nominations}
               action="Nominate"
-              socket={socket}
+              changeNominationList={changeNominationList}
             />
           );
         })}
